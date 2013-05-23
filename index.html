@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Battle of the Bands</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="css/tipsy.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="css/buttons/bootstrap-formhelpers.css" rel="stylesheet">
+<!-- <script src="http://d3js.org/d3.v3.min.js"></script>
+     <script src="http://d3js.org/topojson.v1.min.js"></script> -->
+     <script src="http://code.jquery.com/jquery.js"></script>
+     <script src="js/jquery.tipsy.js"></script>
+
+     <script src="http://d3js.org/queue.v1.min.js"></script>
+     <script src="js/d3.v3.min.js"></script>
+     <script src="js/topojson.js"></script>
+  <style>
+  @import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz:400,700);
+  
+  div#pop-up {
+    display: none;
+    position:absolute;
+    color: white;
+    font-size: 14px;
+    background: rgba(0,0,0,0.8);
+    padding: 5px 10px 5px 10px;
+    -moz-border-radius: 8px 8px;
+    border-radius: 8px 8px;
+  }
+  div#pop-up-title {
+    font-size: 15px;
+    width:200px;
+    margin-bottom: 4px;
+    font-weight: bolder;
+  }
+  div#pop-up-content {
+    font-size: 12px;
+  }
+  div#pop-desc {
+    margin-right:500;
+    padding: 0px 30px;
+    width: 100px;
+  }
+  div#pop-img {
+    font-size: 30px;
+    font-weight: bolder;
+  }
+
+
+  rect {
+    fill: none;
+    pointer-events: all;
+  }
+  .feature {
+    fill: #ccc;
+    cursor: pointer;
+  }
+  .feature.inactive{
+    /*fill: transparent;*/
+    fill: #ccc;
+    fill-opacity: .5;
+  }
+
+  .feature.active {
+    fill: orange;
+  }
+
+  .mesh {
+    fill: none;
+    stroke: #fff;
+    stroke-width: .5px;
+    stroke-linejoin: round;
+  }
+  .squares {
+    fill: #eee;
+    stroke: #000;
+    stroke-width: 1.5px;
+  }
+  h1 {
+    font-size: 96px;
+    margin-top: .3em;
+    margin-bottom: 25px;
+    margin-left: 30px;
+    font-family: "Yanone Kaffeesatz";
+    text-rendering: optimizeLegibility;
+  }
+  h4 {
+    font-size: 30px;
+    line-height: 30px;
+    margin-top: .3em;
+    margin-bottom: 10px;
+    margin-left: 30px;
+    font-family: "Yanone Kaffeesatz";
+    text-rendering: optimizeLegibility;
+  }
+  h6 {
+    font-size: 24px;
+    line-height: 30px;
+    margin-top: .3em;
+    margin-bottom: 10px;
+    margin-left: 30px;
+    font-family: "Yanone Kaffeesatz";
+    text-rendering: optimizeLegibility;
+  }
+  p {
+    font-size: 16px;
+    margin-left: 30px;
+    margin-right: 20px;
+    font-family: "Helvetica Neue";
+  }
+  hr {
+    margin-left: 30px;
+    margin-right: 20px;
+  }
+  footer {
+    margin-top: -10px;
+    margin-left: 30px;
+    font-size: 14px;
+  }
+  #reset {
+    position: absolute;
+    margin-left: 30px;
+  }
+  .span4 {
+    margin-top:-150px;
+    margin-left: -50px;
+  }
+  #mymap {
+    margin-left: 30px;
+    margin-top: -40px;
+  }
+  #mymap2 {
+    margin-bottom: -30px;
+
+  }
+  #move1box,#move2box {
+    margin-top: 5px;
+    margin-left: 110px;
+    margin-bottom: 10px;
+  }
+  #fight {
+    margin-top: 10px;
+    margin-left: 130px;
+    margin-bottom: 10px;
+  }
+  circle {
+    fill: none;
+    stroke-width: 5px;
+  }
+
+
+  </style>
+  </head>
+  <body>
+    <br>
+    <div class="row-fluid">
+      <div class="span12">
+        <h1>Battle of the Bands</h1>
+            <h6>Who's got the broadest bands in the land...</h6>
+            <p>Before getting too excited, head on over to the player select menu on the right and select who will toe the line.
+
+        <div class="row-fluid">
+          <div class="span8">
+            <!--<p>We present a visual tool to help compare individual broadband providers at the state level.  Start your comparison by selecting providers from the dropdowns on the right.  The main visual will show comparative speed of provider 1 to provider 2.  The minimap on the bottom right can also be used to help navigate through the results quickly.</p>-->
+            <div id="mymap2">
+
+            <div id="pop-up">
+            <div id="pop-up-title"></div>
+                  <div id="pop-up-content">
+                      <table> <tr>
+                          <td><div id="pop-img"></div></td>
+                          <td><div id="pop-desc"></div></td>
+                      </tr> </table>
+                  </div>
+              </div>
+
+
+          </div>
+            <footer>By Yoojong Bang, Benedict Lim, Joseph Riley, Maria Virginia Rodriguez</footer>
+        </div>
+          <!-- Hypothesis: Biggest providers covers most of the locations with higher speeds than smaller providers -->
+          <div class="span4">
+          <h4>Player Select. Choose wisely.</h4>
+          <hr>
+          <p>Select the first company.</p>
+            <div class="bfh-selectbox" id="move1box">
+            <input type="hidden" name="selectbox1" id="firstbox" value="">
+            <a class="bfh-selectbox-toggle" role="button" data-toggle="bfh-selectbox" href="#">
+              <span class="bfh-selectbox-option input-medium" data-option=-1 id="myselection1">Combatant 1</span>
+              <b class="caret"></b>
+            </a>
+            <div class="bfh-selectbox-options">
+              <input type="text" class="bfh-selectbox-filter">
+              <div role="listbox">
+              <ul role="option">
+                <li><a tabindex="-1" href="#" data-option="ATT">AT&amp;T</a></li>
+                <li><a tabindex="-1" href="#" data-option="Cellco">Cellco</a></li>
+                <li><a tabindex="-1" href="#" data-option="Clearwire">Clearwire</a></li>
+                <li><a tabindex="-1" href="#" data-option="LeapWireless">Leap Wireless</a></li>
+                <li><a tabindex="-1" href="#" data-option="MetroPCS">MetroPCS</a></li>
+                <li><a tabindex="-1" href="#" data-option="NewCin">New Cingular Wireless</a></li>
+                <li><a tabindex="-1" href="#" data-option="Sprint">Sprint</a></li>
+                <li><a tabindex="-1" href="#" data-option="TMobile">T-Mobile</a></li>
+                <li><a tabindex="-1" href="#" data-option="USCellular">United States Cellular</a></li>
+                <li><a tabindex="-1" href="#" data-option="Verizon">Verizon</a></li>
+              </ul>
+            </div>
+            </div>
+          </div>
+          <br>
+            <p>Next, select the provider you would like to compare with your initial choice.</p>
+            <div class="bfh-selectbox" id="move2box">
+            <input type="hidden" name="selectbox2" id="secondbox" value="">
+            <a class="bfh-selectbox-toggle" role="button" data-toggle="bfh-selectbox" href="#">
+              <span class="bfh-selectbox-option input-medium" data-option=-1 id="myselection2">Combatant 2</span>
+              <b class="caret"></b>
+            </a>
+            <div class="bfh-selectbox-options">
+              <input type="text" class="bfh-selectbox-filter">
+              <div role="listbox">
+              <ul role="option">
+                <li><a tabindex="-1" href="#" data-option="ATT">AT&amp;T</a></li>
+                <li><a tabindex="-1" href="#" data-option="Cellco">Cellco</a></li>
+                <li><a tabindex="-1" href="#" data-option="Clearwire">Clearwire</a></li>
+                <li><a tabindex="-1" href="#" data-option="LeapWireless">Leap Wireless</a></li>
+                <li><a tabindex="-1" href="#" data-option="MetroPCS">MetroPCS</a></li>
+                <li><a tabindex="-1" href="#" data-option="NewCin">New Cingular Wireless</a></li>
+                <li><a tabindex="-1" href="#" data-option="Sprint">Sprint</a></li>
+                <li><a tabindex="-1" href="#" data-option="TMobile">T-Mobile</a></li>
+                <li><a tabindex="-1" href="#" data-option="USCellular">United States Cellular</a></li>
+                <li><a tabindex="-1" href="#" data-option="Verizon">Verizon</a></li>
+              </ul>
+            </div>
+            </div>
+          </div>
+          <br>
+          <hr>
+          <div>
+            <h4>Ready.</h4>
+            <p>
+              <button id="fight" class="btn btn-danger " type="button">Fight!</button>
+            </p>
+          </div>
+              <p>The following minimap will allow you to quickly navigate the data on the left.  Additional information will automatically be displayed via a tooltip.</p>
+              <a href="" id="reset">reset all</a>
+             <div id="mymap"></div>
+            </div>
+          </div>      
+        </div>
+      </div>
+    </div> 
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/buttons/bootstrap-formhelpers-selectbox.js"></script>
+    <script src="js/PseudoDemersCartogram.js"></script>
+  </body>
+</html>

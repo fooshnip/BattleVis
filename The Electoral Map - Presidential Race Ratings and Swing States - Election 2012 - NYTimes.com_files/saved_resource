@@ -1,0 +1,17 @@
+/************ TAGX dynamic tags ************************/
+
+(function() {
+var tagger = new TAGX.Tagger();
+tagger.tag().run(function() {if(window._sf_async_config) {
+	var acct = "anon";
+	if (0 !== "") {
+		var subs = {};
+		acct = "lgdin";
+		if (subs && subs.subscriptions && JSON.parse(subs.subscriptions).length > 0) {
+			acct = "paid";
+		} 
+	}
+	window._sf_async_config._acct = acct;
+}
+;});
+})();

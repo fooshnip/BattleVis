@@ -63,8 +63,8 @@ function ready(error, us, states) {
   d3.select("#fight")
     .on("click", fight);
 
-  var ProvidersPerState = {};
   var nodes = states.features
+
       .map(function(d) {
         var point = projection(d.geometry.coordinates),
             abb = d.id,
@@ -80,13 +80,14 @@ function ready(error, us, states) {
             TMobile = d.properties.TMobile,
             USCellular = d.properties.UnitedStatesCellular,
             Verizon = d.properties.Verizon; 
-            ProvidersPerState[namestate] = [ATT, Cellco, Clearwire, LeapWireless, MetroPCS, NewCin, Sprint, TMobile, USCellular,Verizon];
+       
         return {
+  
           x: point[0]-120, 
           y: point[1]+90,
           x0: point[0]-120, 
           y0: point[1]+90,
-          diff: 5,
+          diff: 0,
           r: radius(5),
           ATT: ATT,
           Cellco: Cellco,
@@ -101,26 +102,23 @@ function ready(error, us, states) {
           namecomp: namecomp, 
           name: namestate          
         };
-      });
+  });
+
+  console.log(nodes);
+
   force
       .nodes(nodes)
-      .on("tick", tick)
-      .start();
+      .on("tick", tick);
+      .start()
 
   var node = svg1.selectAll(".feature")
       .data(nodes)
-      .enter().append("g")
+      .enter()
+      .append("g")
       .call(force.drag);
 
-    // node.append("image")
-    //   .attr("xlink:href", "cell.gif")
-    //   .attr("x", -8)
-    //   .attr("y", -8)
-    //   .attr("width", function(d) { return d.r * 2; })
-    //   .attr("height", function(d) { return d.r * 2; })
-
     node.append("rect")
-      .attr("class", function(d) { return d.name + ' squares';})
+      .attr("class", 'squares')
       .attr("id", function(d) {return d.name;})
       .attr("width", function(d) { return d.r * 2; })
       .attr("height", function(d) { return d.r * 2; })
@@ -258,7 +256,8 @@ function ready(error, us, states) {
         // }
 
         for (key in nodes){         
-          nodes[key]['diff']=nodes[key][Player1]- nodes[key][Player2];
+          nodes[key]['r']=nodes[key][Player1]- nodes[key][Player2];
+          nodes[key]['r']=25;
         }
 
         console.log(nodes);
@@ -266,12 +265,33 @@ function ready(error, us, states) {
 
         if(Player1!=Player2 & Player1!=-1 & Player2!=-1){
             
-            nodes.append("rect")
-            .append("rect")
-            .attr("width", function(d){ return d.r;})
-            .attr("height", function(d){ return d.r;})
-            .style("fill", "blue");
+            // d3.selectAll(".squares")
+            // .data(nodes)
+            // .enter()
+            // .append("rect")
+            // .attr("width", function(d){ return d.r * 2;})
+            // .attr("height", function(d){ return d.r * 2;})
+            // .style("fill", "blue");
                                               
+            var new_square = d3.selectAll(".squares")
+                               .data(nodes)
+                               .call(force.drag);
+
+            // new_square
+            // .enter()
+            // .append("rect")
+            // .attr("width", function(d){ return d.r * 2;})
+            // .attr("height", function(d){ return d.r * 2;})
+            // .style("fill", "blue");
+            new_square
+            // .transition()
+            // .duration(200)
+            .attr("width", function(d){ return d.r* 2;})
+            .attr("height", function(d){ return d.r* 2;})
+            .style("fill", "blue");
+
+            // new_square.exit().duration(200)
+            // .remove();
 
 
 
@@ -332,13 +352,20 @@ function ready(error, us, states) {
             Total = [50, 25];
             SumTotal = PointsPlayer1+ PointsPlayer2;
 
-            node.append("rect")
-              .data(Total)
-              .attr("class", "TotalPoints")
-              .attr("width", function(d) { return d; })
-              .attr("height", function(d) { return d; })
-              .style("stroke", "white")
-              .style("fill", "orange");
+            // node.append("rect")
+            //   .data(Total)
+            //   .attr("class", "TotalPoints")
+            //   .attr("width", function(d) { return d; })
+            //   .attr("height", function(d) { return d; })
+            //   .style("stroke", "white")
+            //   .style("fill", "orange");
+
+            
+
+
+
+
+
 
             /////////TITLE DATA//////////////////////
 

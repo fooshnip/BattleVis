@@ -33,7 +33,7 @@ var radius = d3.scale.sqrt()
     .range([0, 35]);
 
 var force = d3.layout.force()
-    .charge(10)
+    .charge(80)
     .gravity(0)
     .size([width1, height1]);
 
@@ -63,7 +63,7 @@ function ready(error, us, states) {
   d3.select("#fight")
     .on("click", fight);
 
-  var nodes = states.features
+  var nodesStates = states.features
 
       .map(function(d) {
         var point = projection(d.geometry.coordinates),
@@ -87,7 +87,7 @@ function ready(error, us, states) {
           y: point[1]+90,
           x0: point[0]-120, 
           y0: point[1]+90,
-          diff: 0,
+          winner: 0,
           r: radius(5),
           ATT: ATT,
           Cellco: Cellco,
@@ -104,15 +104,13 @@ function ready(error, us, states) {
         };
   });
 
-  console.log(nodes);
-
   force
-      .nodes(nodes)
-      .on("tick", tick);
-      .start()
+      .nodes(nodesStates)
+      .on("tick", tick)
+      .start();
 
   var node = svg1.selectAll(".feature")
-      .data(nodes)
+      .data(nodesStates)
       .enter()
       .append("g")
       .call(force.drag);
@@ -146,7 +144,8 @@ function ready(error, us, states) {
 
       g.selectAll("path")
           .data(us.features)
-        .enter().append("path")
+          .enter()
+          .append("path")
           .attr("d", path)
           .attr("class", "feature")
           .style("stroke", "white");
@@ -209,7 +208,7 @@ function ready(error, us, states) {
   }
 
   function collide(k) {
-    var q = d3.geom.quadtree(nodes);
+    var q = d3.geom.quadtree(nodesStates);
     return function(node) {
       var nr = node.r + padding,
           nx1 = node.x - nr,
@@ -244,23 +243,17 @@ function ready(error, us, states) {
 
         var Player1 = document.getElementById('firstbox').value;
         var Player2 = document.getElementById('secondbox').value;
-        var Player1k = document.getElementById('myselection1').innerHTML;
-        var Player2k = document.getElementById('myselection2').innerHTML;
+        // var Player1k = document.getElementById('myselection1').innerHTML;
+        // var Player2k = document.getElementById('myselection2').innerHTML;
         var PointsPlayer1 =0; 
         var PointsPlayer2 = 0;
         var Diff = {};
-        // Difference calculation
         
-        // for (key in ProvidersPerState){
-        //   Diff[key] = ProvidersPerState[key][Player1]-ProvidersPerState[key][Player2]; 
-        // }
-
-        for (key in nodes){         
-          nodes[key]['r']=nodes[key][Player1]- nodes[key][Player2];
-          nodes[key]['r']=25;
+        for (key in nodesStates){         
+          nodesStates[key]['winner']= Math.max(nodesStates[key][Player1],nodesStates[key][Player2]);
+          console.log(nodesStates[key]['winner']);
+          // nodes[key]['r']=25;
         }
-
-        console.log(nodes);
 
 
         if(Player1!=Player2 & Player1!=-1 & Player2!=-1){
@@ -272,100 +265,88 @@ function ready(error, us, states) {
             // .attr("width", function(d){ return d.r * 2;})
             // .attr("height", function(d){ return d.r * 2;})
             // .style("fill", "blue");
-                                              
-            var new_square = d3.selectAll(".squares")
-                               .data(nodes)
-                               .call(force.drag);
-
-            // new_square
-            // .enter()
-            // .append("rect")
-            // .attr("width", function(d){ return d.r * 2;})
-            // .attr("height", function(d){ return d.r * 2;})
-            // .style("fill", "blue");
-            new_square
-            // .transition()
-            // .duration(200)
-            .attr("width", function(d){ return d.r* 2;})
-            .attr("height", function(d){ return d.r* 2;})
-            .style("fill", "blue");
-
-            // new_square.exit().duration(200)
-            // .remove();
-
-
-
-            // for(key in ProvidersPerState){
-                
-
-
-
-            //     // Chanhing Size and Colors
-            //     d3.select("#"+key)
-            //     // .transition()
-            //     // // .delay(5000)
-            //     // .ease("linear")
-            //     .attr("width", function(d) { if (ProvidersPerState[key][Player1]==0 & ProvidersPerState[key][Player2]==0){
-            //                                   return 80;
-            //                                   }
-            //                                   else {
-            //                                   return Math.abs(ProvidersPerState[key][Player1]-ProvidersPerState[key][Player2])*10;  
-            //                                   }})
-            //     .attr("height", function(d) { if (ProvidersPerState[key][Player1]==0 & ProvidersPerState[key][Player2]==0){
-            //                                   return 80;
-            //                                   }
-            //                                   else {
-            //                                   return Math.abs(ProvidersPerState[key][Player1]-ProvidersPerState[key][Player2])*10;  
-            //                                   }}) 
-            //     .style("fill", function(d) {  if (ProvidersPerState[key][Player1]==0 & ProvidersPerState[key][Player2]==0){
-            //                                   return "purple"
-            //                                   }
-            //                                   else if (ProvidersPerState[key][Player1]>ProvidersPerState[key][Player2]){
-            //                                       return "orange";
-            //                                   } 
-            //                                   else if (ProvidersPerState[key][Player1]<ProvidersPerState[key][Player2]){
-            //                                       return "blue";
-            //                                   }
-            //                                   else {return "green";}
-            //                                   });
-                
-
-                // Text
-                // d3.select("#"+key+"Text")
-                // .attr("dx", function(d) { return Math.abs(ProvidersPerState[key][Player1]-ProvidersPerState[key][Player2]);})
-                // .attr("dy", function(d) { return Math.abs(ProvidersPerState[key][Player1]-ProvidersPerState[key][Player2]);})
-                // .text(function(d) { return d.key; })
-                // .style("font-size", function(d) {return Math.abs(ProvidersPerState[key][Player1]-ProvidersPerState[key][Player2])})
-                // .style("fill", "white")
-                // .style("cursor", "default");
-
-                    // Defining the winner
-                    // if (ProvidersPerState[key][Player1]>ProvidersPerState[key][Player2]){
-                    //     PointsPlayer1 = PointsPlayer1+1;
-                    // }
-                    // else if (ProvidersPerState[key][Player1]<ProvidersPerState[key][Player2]){
-                    //     PointsPlayer2 = PointsPlayer2+1;
-                    // }
-
             
+            svg1.selectAll("g")
+            .remove();
+
+            // force.stop();
+
+                        var nodesStates = states.features
+
+                  .map(function(d) {
+                    var point = projection(d.geometry.coordinates),
+                        abb = d.id,
+                        namestate = d.properties.abb,
+                        namecomp = d.properties.name,
+                        ATT = d.properties.ATT,
+                        Cellco = d.properties.Cellco,
+                        Clearwire = d.properties.Clearwire,
+                        LeapWireless = d.properties.LeapWireless,
+                        MetroPCS = d.properties.MetroPCS,
+                        NewCin = d.properties.NewCingularWireless,
+                        Sprint = d.properties.Sprint,
+                        TMobile = d.properties.TMobile,
+                        USCellular = d.properties.UnitedStatesCellular,
+                        Verizon = d.properties.Verizon; 
+                   
+                    return {
+              
+                      x: point[0]-120, 
+                      y: point[1]+90,
+                      x0: point[0]-120, 
+                      y0: point[1]+90,
+                      winner: 0,
+                      r: radius(5),
+                      ATT: ATT,
+                      Cellco: Cellco,
+                      Clearwire: Clearwire,
+                      LeapWireless: LeapWireless,
+                      MetroPCS: MetroPCS,
+                      NewCin: NewCin,
+                      Sprint: Sprint,
+                      TMobile: TMobile,
+                      USCellular: USCellular,
+                      Verizon: Verizon,
+                      namecomp: namecomp, 
+                      name: namestate          
+                    };
+              });
+
+
+            force
+              .nodes(nodesStates)
+              .on("tick", tick)
+              .start();
+
+            var node = svg1.selectAll(".feature")
+              .data(nodesStates)
+              .enter()
+              .append("g");
+              // .call(force.drag);
+
+            node.append("rect")
+              .attr("class", 'squares')
+              .attr("id", function(d) {return d.name;})
+              .attr("width", function(d) { return d.r * 2; })
+              .attr("height", function(d) { return d.r * 2; })
+              // .attr("transform", function(d) { return "translate(" + (d.x ) + "," + (d.y) + ")"; })
+              .style("stroke", "white")
+              .style("fill", "blue")
+              .on("mouseover",minimouseover)
+              .on("mouseout",minimouseout);
+
+            node.append("text")
+              .attr("dx", function(d) { return d.r/2;})
+              .attr("dy", function(d) { return d.r;})
+              // .attr("transform", function(d) { return "translate(" + (d.x ) + "," + (d.y) + ")"; })
+              .text(function(d) { return d.name; })
+              .style("font-family", "Arial")
+              .style("font-size", function(d) {return (d.value + 100) + " px";})
+              .style("fill", "white")
+              .style("cursor", "default");
 
             Total = [50, 25];
             SumTotal = PointsPlayer1+ PointsPlayer2;
-
-            // node.append("rect")
-            //   .data(Total)
-            //   .attr("class", "TotalPoints")
-            //   .attr("width", function(d) { return d; })
-            //   .attr("height", function(d) { return d; })
-            //   .style("stroke", "white")
-            //   .style("fill", "orange");
-
-            
-
-
-
-
-
 
             /////////TITLE DATA//////////////////////
 
@@ -428,27 +409,77 @@ function ready(error, us, states) {
               .attr("dx", 500)
               .attr("dy", 80+yadjust);
 
-          setInterval(4000,fireworks());
+          // setInterval(4000,fireworks());
 
-          function fireworks() {
-            var transforms = ["100,190","100,220","100,20","-100,200","-100,30","-100,220","-100,20","-200,90",
-            "-200,180","-200,80","200,90","200,190","200,170","200,70","-50,180","-50,80",
-            "50,180","50,150"];
-            for (var i = 0; i < transforms.length; i++) {
-              svg1.append("svg:circle")
-                .attr("cx",400).attr("cy",45).attr("r",0)
-                .style("stroke","yellow").style("fill","grey").style("stroke-opacity",0.5)
-                .transition()
-                  .attr("transform","translate("+transforms[i]+")").delay(5000).duration(2000).ease(Math.sqrt).attr("r",Math.random()*30)
-                  .style("stroke-opacity",1e-6).style("fill-opacity",1e-6).remove();
-            }
-          }
+          // function fireworks() {
+          //   var transforms = ["100,190","100,220","100,20","-100,200","-100,30","-100,220","-100,20","-200,90",
+          //   "-200,180","-200,80","200,90","200,190","200,170","200,70","-50,180","-50,80",
+          //   "50,180","50,150"];
+          //   for (var i = 0; i < transforms.length; i++) {
+          //     svg1.append("svg:circle")
+          //       .attr("cx",400).attr("cy",45).attr("r",0)
+          //       .style("stroke","yellow").style("fill","grey").style("stroke-opacity",0.5)
+          //       .transition()
+          //         .attr("transform","translate("+transforms[i]+")").delay(5000).duration(2000).ease(Math.sqrt).attr("r",Math.random()*30)
+          //         .style("stroke-opacity",1e-6).style("fill-opacity",1e-6).remove();
+          //   }
+          // }
 
           /////////////////TITLE DATA END/////////////////
+        
+          function tick(e) {
+            node.each(gravity(e.alpha * .1))
+                .each(collide(.5));
+            node.attr("transform", function(d) { return "translate(" + (d.x ) + "," + (d.y) + ")"; });
+          }
+
+          function gravity(k) {
+            return function(d) {
+              d.x += (d.x0 - d.x) * k;
+              d.y += (d.y0 - d.y) * k;
+            };
+          }
+
+          function collide(k) {
+            var q = d3.geom.quadtree(nodesStates);
+            return function(node) {
+              var nr = node.r + padding,
+                  nx1 = node.x - nr,
+                  nx2 = node.x + nr,
+                  ny1 = node.y - nr,
+                  ny2 = node.y + nr;
+              q.visit(function(quad, x1, y1, x2, y2) {
+                if (quad.point && (quad.point !== node)) {
+                  var x = node.x - quad.point.x,
+                      y = node.y - quad.point.y,
+                      lx = Math.abs(x),
+                      ly = Math.abs(y),
+                      r = nr + quad.point.r;
+                  if (lx < r && ly < r) {
+                    if (lx > ly) {
+                      lx = (lx - r) * (x < 0 ? -k : k);
+                      node.x -= lx;
+                      quad.point.x += lx;
+                    } else {
+                      ly = (ly - r) * (y < 0 ? -k : k);
+                      node.y -= ly;
+                      quad.point.y += ly;
+                    }
+                  }
+                }
+                return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+              });
+            };
+          }
+
         }
         else {
                 alert("Please Select Player 1 and Player 2");
         }
+
+
+
+
   }
 
 };

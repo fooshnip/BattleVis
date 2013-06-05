@@ -247,7 +247,8 @@ function ready(error, us, states, counties, countymap) {
             // .charge(10000)
             // .gravity(0)
             // .size([width1, height1]);
-          
+            d3.selectAll(".minimap")
+            .remove();
                         
             svg1.selectAll("g")
             .remove();
@@ -343,7 +344,7 @@ function ready(error, us, states, counties, countymap) {
                   .enter()
                   .append("path")
                   .attr("d", path)
-                  .attr("class", "feature")
+                  .attr("class", "minimap")
                   .style("stroke", "white");
 
               g.selectAll("path")
@@ -528,6 +529,12 @@ function ready(error, us, states, counties, countymap) {
                     };
               });
 
+            for (key in nodesCounties){         
+            nodesCounties[key]['winner']= Math.max(nodesCounties[key][Player1],nodesCounties[key][Player2]);
+            console.log(nodesCounties[key]['winner']);
+            console.log(nodesCounties[key]['r']);
+            }
+
             force
               .nodes(nodesCounties)
               .on("tick", tick)
@@ -544,16 +551,15 @@ function ready(error, us, states, counties, countymap) {
               .attr("id", function(d) {return d.name;})
               .attr("width", function(d) { return d.r*2; })
               .attr("height", function(d) { return d.r*2; })
-              //.attr("transform", function(d) { return "translate(" + (d.x ) + "," + (d.y) + ")"; })
+              .style("fill", function(d) { if(d.winner ==0){return 'url(#pattern)';}else if(d[Player1]==d[Player2]&&d[Player1]!=0){return 'yellow';}else if(d[Player1]>d[Player2]){return 'blue';} else{return 'red';}})
               .style("stroke", "white")
-              .style("fill", "blue")
+              // .style("fill", "blue")
               .on("mouseover",minimouseover)
               .on("mouseout",minimouseout);
 
             node.append("text")
               .attr("dx", function(d) { return d.r/2;})
               .attr("dy", function(d) { return d.r;})
-              //.attr("transform", function(d) { return "translate(" + (d.x ) + "," + (d.y) + ")"; })
               .text(function(d) { return d.namecomp; })
               .style("font-family", "Arial")
               .style("font-size", function(d) {return (d.value + 50) + " px";})

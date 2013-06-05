@@ -308,7 +308,8 @@ function ready(error, us, states, counties, countymap) {
             var node = svg1.selectAll(".feature")
               .data(nodesStates)
               .enter()
-              .append("g");
+              .append("g")
+              .call(force.drag);
 
             node.append("rect")
               .attr("class", 'squares')
@@ -549,22 +550,21 @@ function ready(error, us, states, counties, countymap) {
             node.append("rect")
               .attr("class", 'squares')
               .attr("id", function(d) {return d.name;})
-              .attr("width", function(d) { return d.r*2; })
-              .attr("height", function(d) { return d.r*2; })
+              .attr("width", function(d) { if(d.winner ==0){return 20;} else{return d.winner*3+20;}})
+              .attr("height", function(d) { if(d.winner ==0){return 20;} else{return d.winner*3+20;}})
               .style("fill", function(d) { if(d.winner ==0){return 'url(#pattern)';}else if(d[Player1]==d[Player2]&&d[Player1]!=0){return 'yellow';}else if(d[Player1]>d[Player2]){return 'blue';} else{return 'red';}})
               .style("stroke", "white")
-              // .style("fill", "blue")
               .on("mouseover",minimouseover)
               .on("mouseout",minimouseout);
 
-            node.append("text")
-              .attr("dx", function(d) { return d.r/2;})
-              .attr("dy", function(d) { return d.r;})
-              .text(function(d) { return d.namecomp; })
-              .style("font-family", "Arial")
-              .style("font-size", function(d) {return (d.value + 50) + " px";})
-              .style("fill", "white")
-              .style("cursor", "default");
+            // node.append("text")
+            //   .attr("dx", function(d) { return d.r/2;})
+            //   .attr("dy", function(d) { return d.r;})
+            //   .text(function(d) { return d.namecomp; })
+            //   .style("font-family", "Arial")
+            //   .style("font-size", function(d) {return (d.value + 50) + " px";})
+            //   .style("fill", "white")
+            //   .style("cursor", "default");
 
           var miniCounty = countymap.features
                   .filter(function(d){return countymap.id==counties.features.id && counties.features.map(function(d){var abb=d.properties.abb
@@ -591,7 +591,7 @@ function ready(error, us, states, counties, countymap) {
           function collide(k) {
             var q = d3.geom.quadtree(nodesCounties);
             return function(node) {
-              var nr = node.r + padding,
+              var nr = node.r + padding+5,
                   nx1 = node.x - nr,
                   nx2 = node.x + nr,
                   ny1 = node.y - nr,

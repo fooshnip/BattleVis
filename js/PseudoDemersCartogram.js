@@ -33,14 +33,13 @@ var radius = d3.scale.sqrt()
     .range([0, 35]);
 
 var force = d3.layout.force()
-    .charge(80)
+    .charge(20)
     .gravity(0)
     .size([width1, height1]);
 
 var svg = d3.select("#mymap").append("svg")
-    .attr("width", "100%")
-    .attr("height", "50%")
-    .attr("viewBox", "0 0 600 500")
+    .attr("width", 500)
+    .attr("height", 300)
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");//MINIMAP
 
 // var svg2 = d3.select("#mymap2").append("svg")
@@ -54,10 +53,12 @@ var svg1 = d3.select("#mymap2").append("svg")
 
 queue()
     .defer(d3.json, "data/us.json")
-    .defer(d3.json, "data/finaltable.json")
+    .defer(d3.json, "data/statedata.json")
+    .defer(d3.json, "data/countylevel.json")
+    .defer(d3.json, "data/us-counties.json")
     .await(ready);    
 
-function ready(error, us, states) {
+function ready(error, us, states, counties, countymap) {
   
   //LET'S GET IT ON
   d3.select("#fight")
@@ -88,7 +89,7 @@ function ready(error, us, states) {
           x0: point[0]-120, 
           y0: point[1]+90,
           winner: 0,
-          r: radius(5),
+          r: 25,
           ATT: ATT,
           Cellco: Cellco,
           Clearwire: Clearwire,
@@ -125,6 +126,7 @@ function ready(error, us, states) {
       .on("mouseover",minimouseover)
       .on("mouseout",minimouseout);
 
+
     node.append("text")
       .attr("dx", function(d) { return d.r/2;})
       .attr("dy", function(d) { return d.r;})
@@ -137,24 +139,9 @@ function ready(error, us, states) {
 
 ////////////////MINIMAP/////////////////////
 
-  var g = svg.selectAll(".minimap")
-            .data(us.features)
-            .enter()
-            .append("g");
 
-      g.selectAll("path")
-          .data(us.features)
-          .enter()
-          .append("path")
-          .attr("d", path)
-          .attr("class", "feature")
-          .style("stroke", "white");
-
-      g.selectAll("path")
-          .data(nodes)
-          .style("fill", "orange")
-          .on("mouseover",minimouseover)
-          .on("mouseout",minimouseout);
+          // .on("mouseover",minimouseover)
+          // .on("mouseout",minimouseout);
 
   function minimouseover(d){
 
@@ -241,6 +228,7 @@ function ready(error, us, states) {
 
   function fight(){  
 
+
         var Player1 = document.getElementById('firstbox').value;
         var Player2 = document.getElementById('secondbox').value;
         // var Player1k = document.getElementById('myselection1').innerHTML;
@@ -249,29 +237,19 @@ function ready(error, us, states) {
         var PointsPlayer2 = 0;
         var Diff = {};
         
-        for (key in nodesStates){         
-          nodesStates[key]['winner']= Math.max(nodesStates[key][Player1],nodesStates[key][Player2]);
-          console.log(nodesStates[key]['winner']);
-          // nodes[key]['r']=25;
-        }
-
 
         if(Player1!=Player2 & Player1!=-1 & Player2!=-1){
-            
-            // d3.selectAll(".squares")
-            // .data(nodes)
-            // .enter()
-            // .append("rect")
-            // .attr("width", function(d){ return d.r * 2;})
-            // .attr("height", function(d){ return d.r * 2;})
-            // .style("fill", "blue");
-            
+
+            var force1 = d3.layout.force()
+            .charge(-100)
+            .gravity(0)
+            .size([width1, height1]);
+          
+                        
             svg1.selectAll("g")
             .remove();
 
-            // force.stop();
-
-                        var nodesStates = states.features
+            var nodesStates = states.features
 
                   .map(function(d) {
                     var point = projection(d.geometry.coordinates),
@@ -296,7 +274,7 @@ function ready(error, us, states) {
                       x0: point[0]-120, 
                       y0: point[1]+90,
                       winner: 0,
-                      r: radius(5),
+                      r: 25,
                       ATT: ATT,
                       Cellco: Cellco,
                       Clearwire: Clearwire,
@@ -312,8 +290,13 @@ function ready(error, us, states) {
                     };
               });
 
+            for (key in nodesStates){         
+            nodesStates[key]['winner']= Math.max(nodesStates[key][Player1],nodesStates[key][Player2]);
+            console.log(nodesStates[key]['winner']);
+            console.log(nodesStates[key]['r']);
+            }
 
-            force
+            force1
               .nodes(nodesStates)
               .on("tick", tick)
               .start();
@@ -322,23 +305,20 @@ function ready(error, us, states) {
               .data(nodesStates)
               .enter()
               .append("g");
-              // .call(force.drag);
 
             node.append("rect")
               .attr("class", 'squares')
-              .attr("id", function(d) {return d.name;})
-              .attr("width", function(d) { return d.r * 2; })
-              .attr("height", function(d) { return d.r * 2; })
-              // .attr("transform", function(d) { return "translate(" + (d.x ) + "," + (d.y) + ")"; })
+              .attr("id", function(d) {return d.name;}) 
+              .attr("width", function(d) { if(d.winner ==0){return 45;} else{return d.winner*6+45;}})
+              .attr("height", function(d) { if(d.winner ==0){return 45;} else{return d.winner*6+45;}})
               .style("stroke", "white")
-              .style("fill", "blue")
+              .style("fill", function(d) { if (d[Player1]>d[Player2]) {return 'blue';} else{return 'red';}})
               .on("mouseover",minimouseover)
               .on("mouseout",minimouseout);
 
             node.append("text")
-              .attr("dx", function(d) { return d.r/2;})
-              .attr("dy", function(d) { return d.r;})
-              // .attr("transform", function(d) { return "translate(" + (d.x ) + "," + (d.y) + ")"; })
+              .attr("dx", function(d) { if(d.winner ==0){return 45/2;} else{return (d.winner+45)/2;}})
+              .attr("dy", function(d) { if(d.winner ==0){return 45/2;} else{return d.winner+45/2;}})
               .text(function(d) { return d.name; })
               .style("font-family", "Arial")
               .style("font-size", function(d) {return (d.value + 100) + " px";})
@@ -347,6 +327,26 @@ function ready(error, us, states) {
 
             Total = [50, 25];
             SumTotal = PointsPlayer1+ PointsPlayer2;
+
+            /////////MINI MAP//////////////////////
+
+              var g = svg.selectAll(".minimap")
+                    .data(us.features)
+                    .enter()
+                    .append("g");
+
+              g.selectAll("path")
+                  .data(us.features)
+                  .enter()
+                  .append("path")
+                  .attr("d", path)
+                  .attr("class", "feature")
+                  .style("stroke", "white");
+
+              g.selectAll("path")
+                  .data(nodesStates)
+                  .style("fill", "orange")
+                  .on('click', onclick);
 
             /////////TITLE DATA//////////////////////
 
@@ -428,7 +428,7 @@ function ready(error, us, states) {
           /////////////////TITLE DATA END/////////////////
         
           function tick(e) {
-            node.each(gravity(e.alpha * .1))
+            node.each(gravity(e.alpha * .2))
                 .each(collide(.5));
             node.attr("transform", function(d) { return "translate(" + (d.x ) + "," + (d.y) + ")"; });
           }
@@ -471,6 +471,146 @@ function ready(error, us, states) {
               });
             };
           }
+
+
+        function onclick(d){
+
+            var Statename = d.name;
+            console.log(Statename);
+
+            svg1.selectAll("g")
+                  .remove();
+
+            // force.stop();
+
+              var nodesCounties = counties.features
+                  .filter(function(d){return d.properties.abb==Statename;})
+                  .map(function(d) {
+                      var point = projection(d.geometry.coordinates),
+                        abb = d.id,
+                        namestate = d.properties.abb,
+                        namecomp = d.properties.countyname,
+                        ATT = d.properties.ATT,
+                        Cellco = d.properties.Cellco,
+                        Clearwire = d.properties.Clearwire,
+                        LeapWireless = d.properties.LeapWireless,
+                        MetroPCS = d.properties.MetroPCS,
+                        NewCin = d.properties.NewCingularWireless,
+                        Sprint = d.properties.Sprint,
+                        TMobile = d.properties.TMobile,
+                        USCellular = d.properties.UnitedStatesCellular,
+                        Verizon = d.properties.Verizon; 
+                   
+                    return {
+                      x: point[0]-120, 
+                      y: point[1]+90,
+                      x0: point[0]-120, 
+                      y0: point[1]+90,
+                      winner: 0,
+                      r: radius(5),
+                      ATT: ATT,
+                      Cellco: Cellco,
+                      Clearwire: Clearwire,
+                      LeapWireless: LeapWireless,
+                      MetroPCS: MetroPCS,
+                      NewCin: NewCin,
+                      Sprint: Sprint,
+                      TMobile: TMobile,
+                      USCellular: USCellular,
+                      Verizon: Verizon,
+                      abb:abb,
+                      namecomp: namecomp, 
+                      name: namestate          
+                    };
+              });
+
+            force
+              .nodes(nodesCounties)
+              .on("tick", tick)
+              .start();
+
+            var node = svg1.selectAll(".feature")
+              .data(nodesCounties)
+              .enter()
+              .append("g")
+              .call(force.drag);
+
+            node.append("rect")
+              .attr("class", 'squares')
+              .attr("id", function(d) {return d.name;})
+              .attr("width", function(d) { return d.r*2; })
+              .attr("height", function(d) { return d.r*2; })
+              //.attr("transform", function(d) { return "translate(" + (d.x ) + "," + (d.y) + ")"; })
+              .style("stroke", "white")
+              .style("fill", "blue")
+              .on("mouseover",minimouseover)
+              .on("mouseout",minimouseout);
+
+            node.append("text")
+              .attr("dx", function(d) { return d.r/2;})
+              .attr("dy", function(d) { return d.r;})
+              //.attr("transform", function(d) { return "translate(" + (d.x ) + "," + (d.y) + ")"; })
+              .text(function(d) { return d.namecomp; })
+              .style("font-family", "Arial")
+              .style("font-size", function(d) {return (d.value + 50) + " px";})
+              .style("fill", "white")
+              .style("cursor", "default");
+
+          var miniCounty = countymap.features
+                  .filter(function(d){return countymap.id==counties.features.id && counties.features.map(function(d){var abb=d.properties.abb
+                              return abb;})==Statename;});
+          console.log(miniCounty);
+          console.log(counties.features.map(function(d){var abb=d.properties.abb
+                              return abb}));
+          //console.log(counties.features.properties.abb);
+          // console.log(nodesCounties);
+        
+          function tick(e) {
+            node.each(gravity(e.alpha * .1))
+                .each(collide(.5));
+            node.attr("transform", function(d) { return "translate(" + (d.x) + "," + (d.y) + ")"; });
+          }
+
+          function gravity(k) {
+            return function(d) {
+              d.x += (d.x0 - d.x) * k;
+              d.y += (d.y0 - d.y) * k;
+            };
+          }
+
+          function collide(k) {
+            var q = d3.geom.quadtree(nodesCounties);
+            return function(node) {
+              var nr = node.r + padding,
+                  nx1 = node.x - nr,
+                  nx2 = node.x + nr,
+                  ny1 = node.y - nr,
+                  ny2 = node.y + nr;
+              q.visit(function(quad, x1, y1, x2, y2) {
+                if (quad.point && (quad.point !== node)) {
+                  var x = node.x - quad.point.x,
+                      y = node.y - quad.point.y,
+                      lx = Math.abs(x),
+                      ly = Math.abs(y),
+                      r = nr + quad.point.r;
+                  if (lx < r && ly < r) {
+                    if (lx > ly) {
+                      lx = (lx - r) * (x < 0 ? -k : k);
+                      node.x -= lx;
+                      quad.point.x += lx;
+                    } else {
+                      ly = (ly - r) * (y < 0 ? -k : k);
+                      node.y -= ly;
+                      quad.point.y += ly;
+                    }
+                  }
+                }
+                return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+              });
+            };
+          }
+
+        }
 
         }
         else {

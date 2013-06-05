@@ -82,7 +82,7 @@
     font-size: 96px;
     margin-top: .3em;
     margin-bottom: 25px;
-    margin-left: 30px;
+    margin-left: 20px;
     font-family: "Yanone Kaffeesatz";
     text-rendering: optimizeLegibility;
   }
@@ -91,7 +91,7 @@
     line-height: 30px;
     margin-top: .3em;
     margin-bottom: 10px;
-    margin-left: 30px;
+    margin-left: 20px;
     font-family: "Yanone Kaffeesatz";
     text-rendering: optimizeLegibility;
   }
@@ -99,7 +99,7 @@
     font-size: 24px;
     line-height: 30px;
     margin-top: .3em;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     margin-left: 30px;
     font-family: "Yanone Kaffeesatz";
     text-rendering: optimizeLegibility;
@@ -110,13 +110,13 @@
     margin-right: 20px;
     font-family: "Helvetica Neue";
   }
-  hr {
-    margin-left: 30px;
+  hr{
+    margin-left: 20px;
     margin-right: 20px;
   }
   footer {
     margin-top: -10px;
-    margin-left: 30px;
+    margin-left: 20px;
     font-size: 14px;
   }
   #reset {
@@ -137,13 +137,19 @@
   }
   #move1box,#move2box {
     margin-top: 5px;
-    margin-left: 110px;
+    margin-left: 30px;
     margin-bottom: 10px;
   }
   #fight {
     margin-top: 10px;
-    margin-left: 130px;
+    margin-left: 30px;
     margin-bottom: 10px;
+  }
+  .table, tr, th, td, thead, tbody  {
+    margin-top: 10px;
+    margin-left: 30px;
+    margin-right: 50px;
+
   }
   circle {
     fill: none;
@@ -202,8 +208,11 @@
                   <li><a tabindex="-1" href="#" data-option="Verizon">Verizon</a></li>
                 </ul>
               </div>
+
               </div>
+
             </div>
+
          <!--  <br>
             <p>Next, select the provider you would like to compare with your initial choice.</p> -->
             <div class="bfh-selectbox" id="move2box">
@@ -230,21 +239,50 @@
             </div>
             </div>
           </div>
-          <br>
-          <hr>
           <div>
-            <h4>Ready.</h4>
-            <p>
+            
+            <!-- <p> -->
+              <!-- <h4>Ready.</h4> -->
               <button id="fight" class="btn btn-danger " type="button">Fight!</button>
-            </p>
+            <!-- </p> -->
           </div>
+          <hr>
+          <!-- <br> -->
+          <div>
+            <table id="table" class="table table-condensed">
+                <!-- <caption>State, county</caption> -->
+              
+              <thead>
+
+                <tr >
+                  <th>STATE, County</th>
+                </tr>
+                <tr>
+                  <th>Players</th>
+                  <th>Avg. Download Speed</th>
+                </tr>
+              </thead>
+              <tbody>
+                <col width="10">
+              <col width="10">
+                <tr>
+                  <td>Company 1</td>
+                  <td>Player 1</td>
+                </tr>
+                <tr>
+                  <td>Company 2</td>
+                  <td>Player 1</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <hr>
+
               <p>The following minimap will allow you to quickly navigate the data on the left.  Additional information will automatically be displayed via a tooltip.</p>
               <a href="" id="reset">reset all</a>
              <div id="mymap"></div>
             </div>
           </div>      
-        <!-- </div> -->
-      <!-- </div> -->
     </div> 
     <script src="js/bootstrap.min.js"></script>
     <script src="js/buttons/bootstrap-formhelpers-selectbox.js"></script>

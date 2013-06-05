@@ -165,62 +165,47 @@
       </g>
     </svg>
     <br>
-    <div class="row-fluid">
-      <div class="span12">
-        <h1>Battle of the Bands</h1>
-            <h6>Who's got the broadest bands in the land...</h6>
-            <p>Before getting too excited, head on over to the player select menu on the right and select who will toe the line.
-
         <div class="row-fluid">
-          <div class="span8">
-            <!--<p>We present a visual tool to help compare individual broadband providers at the state level.  Start your comparison by selecting providers from the dropdowns on the right.  The main visual will show comparative speed of provider 1 to provider 2.  The minimap on the bottom right can also be used to help navigate through the results quickly.</p>-->
+          <div class="span7">
+            <h1>Battle of the Bands</h1>
+            <h6>Who's got the broadest bands in the land...</h6>
+            <hr>
+            <!-- <p>Before getting too excited, head on over to the player select menu on the right and select who will toe the line. -->
             <div id="mymap2">
-
-            <div id="pop-up">
-            <div id="pop-up-title"></div>
-                  <div id="pop-up-content">
-                      <table> <tr>
-                          <td><div id="pop-img"></div></td>
-                          <td><div id="pop-desc"></div></td>
-                      </tr> </table>
-                  </div>
-              </div>
-
-
-          </div>
+            </div>
             <footer>By Yoojong Bang, Benedict Lim, Joseph Riley, Maria Virginia Rodriguez</footer>
-        </div>
+          </div>
           <!-- Hypothesis: Biggest providers covers most of the locations with higher speeds than smaller providers -->
-          <div class="span4">
+          <div class="span5">
           <h4>Player Select. Choose wisely.</h4>
           <hr>
           <p>Select the first company.</p>
             <div class="bfh-selectbox" id="move1box">
-            <input type="hidden" name="selectbox1" id="firstbox" value="">
-            <a class="bfh-selectbox-toggle" role="button" data-toggle="bfh-selectbox" href="#">
-              <span class="bfh-selectbox-option input-medium" data-option=-1 id="myselection1">Combatant 1</span>
-              <b class="caret"></b>
-            </a>
-            <div class="bfh-selectbox-options">
-              <input type="text" class="bfh-selectbox-filter">
-              <div role="listbox">
-              <ul role="option">
-                <li><a tabindex="-1" href="#" data-option="ATT">AT&amp;T</a></li>
-                <li><a tabindex="-1" href="#" data-option="Cellco">Cellco</a></li>
-                <li><a tabindex="-1" href="#" data-option="Clearwire">Clearwire</a></li>
-                <li><a tabindex="-1" href="#" data-option="LeapWireless">Leap Wireless</a></li>
-                <li><a tabindex="-1" href="#" data-option="MetroPCS">MetroPCS</a></li>
-                <li><a tabindex="-1" href="#" data-option="NewCin">New Cingular Wireless</a></li>
-                <li><a tabindex="-1" href="#" data-option="Sprint">Sprint</a></li>
-                <li><a tabindex="-1" href="#" data-option="TMobile">T-Mobile</a></li>
-                <li><a tabindex="-1" href="#" data-option="USCellular">United States Cellular</a></li>
-                <li><a tabindex="-1" href="#" data-option="Verizon">Verizon</a></li>
-              </ul>
+              <input type="hidden" name="selectbox1" id="firstbox" value="">
+              <a class="bfh-selectbox-toggle" role="button" data-toggle="bfh-selectbox" href="#">
+                <span class="bfh-selectbox-option input-medium" data-option=-1 id="myselection1">Combatant 1</span>
+                <b class="caret"></b>
+              </a>
+              <div class="bfh-selectbox-options">
+                <input type="text" class="bfh-selectbox-filter">
+                <div role="listbox">
+                <ul role="option">
+                  <li><a tabindex="-1" href="#" data-option="ATT">AT&amp;T</a></li>
+                  <li><a tabindex="-1" href="#" data-option="Cellco">Cellco</a></li>
+                  <li><a tabindex="-1" href="#" data-option="Clearwire">Clearwire</a></li>
+                  <li><a tabindex="-1" href="#" data-option="LeapWireless">Leap Wireless</a></li>
+                  <li><a tabindex="-1" href="#" data-option="MetroPCS">MetroPCS</a></li>
+                  <li><a tabindex="-1" href="#" data-option="NewCin">New Cingular Wireless</a></li>
+                  <li><a tabindex="-1" href="#" data-option="Sprint">Sprint</a></li>
+                  <li><a tabindex="-1" href="#" data-option="TMobile">T-Mobile</a></li>
+                  <li><a tabindex="-1" href="#" data-option="USCellular">United States Cellular</a></li>
+                  <li><a tabindex="-1" href="#" data-option="Verizon">Verizon</a></li>
+                </ul>
+              </div>
+              </div>
             </div>
-            </div>
-          </div>
-          <br>
-            <p>Next, select the provider you would like to compare with your initial choice.</p>
+         <!--  <br>
+            <p>Next, select the provider you would like to compare with your initial choice.</p> -->
             <div class="bfh-selectbox" id="move2box">
             <input type="hidden" name="selectbox2" id="secondbox" value="">
             <a class="bfh-selectbox-toggle" role="button" data-toggle="bfh-selectbox" href="#">
@@ -258,8 +243,8 @@
              <div id="mymap"></div>
             </div>
           </div>      
-        </div>
-      </div>
+        <!-- </div> -->
+      <!-- </div> -->
     </div> 
     <script src="js/bootstrap.min.js"></script>
     <script src="js/buttons/bootstrap-formhelpers-selectbox.js"></script>

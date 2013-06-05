@@ -156,18 +156,18 @@ function ready(error, us, states, counties, countymap) {
       d3.selectAll("."+d.name)
         .style("stroke-width", 1);
 
-      $("#pop-up").fadeOut(100,function () {
-          // Popup content
-          $("#pop-up-title").html(d.namecomp);
-          $("#pop-img").html(name);
-          $("#pop-desc").html("In "+name+", the winner is: "+d.ATT);
+      // $("#pop-up").fadeOut(100,function () {
+      //     // Popup content
+      //     $("#pop-up-title").html(d.namecomp);
+      //     $("#pop-img").html(name);
+      //     $("#pop-desc").html("In "+name+", the winner is: "+d.ATT);
 
-          // Popup position
-          var popLeft = (d.x*scale)+trans[0]+20;//lE.cL[0] + 20;
-          var popTop = (d.y*scale)+trans[1]+20;//lE.cL[1] + 70;
-          $("#pop-up").css({"left":popLeft,"top":popTop});
-          $("#pop-up").fadeIn(100);
-      });
+      //     // Popup position
+      //     var popLeft = (d.x*scale)+trans[0]+20;//lE.cL[0] + 20;
+      //     var popTop = (d.y*scale)+trans[1]+20;//lE.cL[1] + 70;
+      //     $("#pop-up").css({"left":popLeft,"top":popTop});
+      //     $("#pop-up").fadeIn(100);
+      // });
   }
 
   function minimouseout(d){
@@ -179,8 +179,8 @@ function ready(error, us, states, counties, countymap) {
       d3.selectAll("."+name)
         .style("stroke-width", 1);
 
-      $("#pop-up").fadeOut(50);
-        d3.select("."+name).attr("fill","url(#ten1)");
+      // $("#pop-up").fadeOut(50);
+      //   d3.select("."+name).attr("fill","url(#ten1)");
   }
 //////////////MINIMAP END////////////////////
 
@@ -242,11 +242,6 @@ function ready(error, us, states, counties, countymap) {
 
         if(Player1!=Player2 & Player1!=-1 & Player2!=-1){
 
-            // var force1 = d3.layout.force()
-            // .friction(0)
-            // .charge(10000)
-            // .gravity(0)
-            // .size([width1, height1]);
             d3.selectAll(".minimap")
             .remove();
                         

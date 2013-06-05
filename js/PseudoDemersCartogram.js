@@ -348,7 +348,7 @@ function ready(error, us, states, counties, countymap) {
 
               g.selectAll("path")
                   .data(nodesStates)
-                  .style("fill", "orange")
+                  .style("fill", function(d) { if(d.winner ==0){return 'url(#pattern)';}else if(d[Player1]==d[Player2]&&d[Player1]!=0){return 'yellow';}else if(d[Player1]>d[Player2]){return 'blue';} else{return 'red';}})
                   .on('click', onclick);
 
             /////////TITLE DATA//////////////////////
@@ -511,7 +511,7 @@ function ready(error, us, states, counties, countymap) {
                       x0: point[0]-120, 
                       y0: point[1]+90,
                       winner: 0,
-                      r: radius(5),
+                      r: 10,
                       ATT: ATT,
                       Cellco: Cellco,
                       Clearwire: Clearwire,

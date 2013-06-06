@@ -16,7 +16,7 @@ var margin = {top: -20, right: 20, bottom: 20, left: 20},
 
 var projection1 = d3.geo.albersUsa()
     .scale(475)
-    .translate([width / 1.1, height / 1]);///MINIMAP
+    .translate([width / .95, height / 1.5]);///MINIMAP
 
 var projection  = d3.geo.albersUsa();////MAINMAP
 
@@ -134,7 +134,6 @@ function ready(error, us, states, counties, countymap) {
       .attr("dy", function(d) { return d.r;})
       .text(function(d) { return d.name; })
       .style("font-family", "Arial")
-      // .style("font-size", function(d) {return (d.value + 100) + " px";})
       .style("font-size", 16)
       .style("fill", "black")
       .style("cursor", "default");
@@ -151,23 +150,27 @@ function ready(error, us, states, counties, countymap) {
       var name = d.name;
       console.log(name);
       d3.select(this)
-        .style("stroke","black");
+        .style("stroke","gray")
+        .style("stroke-width", 0.75);
+        // .style("stroke-opacity", 0.5);
 
       d3.selectAll("."+d.name)
-        .style("stroke-width", 1);
+        .style("stroke-width", 8)
+        ;
 
-      // $("#pop-up").fadeOut(100,function () {
-      //     // Popup content
-      //     $("#pop-up-title").html(d.namecomp);
-      //     $("#pop-img").html(name);
-      //     $("#pop-desc").html("In "+name+", the winner is: "+d.ATT);
+      $("#StateName").html(d.namecomp);
+      $("#pop-up").fadeOut(100,function () {
+          // Popup content
+          $("#pop-up-title").html(d.namecomp);
+          $("#pop-img").html(name);
+          
 
-      //     // Popup position
-      //     var popLeft = (d.x*scale)+trans[0]+20;//lE.cL[0] + 20;
-      //     var popTop = (d.y*scale)+trans[1]+20;//lE.cL[1] + 70;
-      //     $("#pop-up").css({"left":popLeft,"top":popTop});
-      //     $("#pop-up").fadeIn(100);
-      // });
+          // Popup position
+          var popLeft = (d.x*scale)+trans[0]+20;//lE.cL[0] + 20;
+          var popTop = (d.y*scale)+trans[1]+20;//lE.cL[1] + 70;
+          $("#pop-up").css({"left":popLeft,"top":popTop});
+          $("#pop-up").fadeIn(100);
+      });
   }
 
   function minimouseout(d){
@@ -230,6 +233,8 @@ function ready(error, us, states, counties, countymap) {
   }
 
   function fight(){  
+
+        $("#default1").show();
 
         var Player1 = document.getElementById('firstbox').value;
         var Player2 = document.getElementById('secondbox').value;
@@ -350,7 +355,10 @@ function ready(error, us, states, counties, countymap) {
 
             /////////TITLE DATA//////////////////////
 
-            var yadjust=60;
+            var Player1k = document.getElementById('myselection1').innerHTML;
+            var Player2k = document.getElementById('myselection2').innerHTML;  
+
+            var yadjust=30;
             
             svg1.selectAll(".titletext")
               .transition()
@@ -359,71 +367,70 @@ function ready(error, us, states, counties, countymap) {
             svg1.append("text")
               .attr("class","titletext")
               .text(Player1k)
-              .style("font-size", "66px")
+              .style("font-size", "40px")
               .style("font-family", "Yanone Kaffeesatz")
-              .style("fill","green")
-              .attr("dx", -100)
-              .attr("dy", 70+yadjust)
-            .transition()
-              .delay(500)
-              .ease("bounce")
-              .duration(2500)
-              .attr("dx", 300)
-              .attr("dy", 70+yadjust)
-            .transition()
-              .ease("linear")
-              .attr("dx", 200)
-              .attr("dy", 70+yadjust);
-
-            svg1.append("text")
-              .attr("class","titletext")
-              .text("vs.")
-              .style("font-size", "136px")
-              .style("font-family", "Yanone Kaffeesatz")
-              .style("fill","grey")
-              .attr("dx", 350)
-              .attr("dy", -100+yadjust)
-            .transition()
-              .ease("backs")
-              .delay(1250)
-              .duration(4000)
-              .attr("dx", 350)
-              .attr("dy", 80+yadjust);
+              .style("fill","blue")
+              .attr("dx", 100)
+              .attr("dy", 0+yadjust);
 
             svg1.append("text")
               .text(Player2k)
               .attr("class","titletext")
-              .style("font-size", "66px")
+              .style("font-size", "40px")
               .style("font-family", "Yanone Kaffeesatz")
-              .style("fill","blue")
-              .attr("dx", 1000)
-              .attr("dy", 80+yadjust)
-            .transition()
-              .delay(500)
-              .ease("bounce")
-              .duration(2500)
-              .attr("dx", 400)
-              .attr("dy", 80+yadjust)
-            .transition()
-              .ease("linear")
-              .attr("dx", 500)
-              .attr("dy", 80+yadjust);
+              .style("fill","red")
+              .attr("dx", 700)
+              .attr("dy", 0+yadjust);
 
-          // setInterval(4000,fireworks());
+            svg1.append("rect")
+              .attr("class","p1")
+              .attr("x", 100-50)
+              .attr("y", 0)
+              .attr("width",15)
+              .attr("height",15)
+              .style("fill","blue");
 
-          // function fireworks() {
-          //   var transforms = ["100,190","100,220","100,20","-100,200","-100,30","-100,220","-100,20","-200,90",
-          //   "-200,180","-200,80","200,90","200,190","200,170","200,70","-50,180","-50,80",
-          //   "50,180","50,150"];
-          //   for (var i = 0; i < transforms.length; i++) {
-          //     svg1.append("svg:circle")
-          //       .attr("cx",400).attr("cy",45).attr("r",0)
-          //       .style("stroke","yellow").style("fill","grey").style("stroke-opacity",0.5)
-          //       .transition()
-          //         .attr("transform","translate("+transforms[i]+")").delay(5000).duration(2000).ease(Math.sqrt).attr("r",Math.random()*30)
-          //         .style("stroke-opacity",1e-6).style("fill-opacity",1e-6).remove();
-          //   }
-          // }
+            svg1.append("rect")
+              .attr("class","p2")
+              .style("fill","red")
+              .attr("x", 700-50)
+              .attr("y", 0)
+              .attr("width",15)
+              .attr("height",15);
+
+            svg1.append("text")//TIES
+              .attr("class","titletext")
+              .text("Ties")
+              .style("font-size", "20px")
+              .style("font-family", "Yanone Kaffeesatz")
+              .style("fill","black")
+              .attr("dx", 450)
+              .attr("dy", 0+yadjust);
+
+            svg1.append("text")//NOVALUES
+              .text("No values")
+              .attr("class","titletext")
+              .style("font-size", "20px")
+              .style("font-family", "Yanone Kaffeesatz")
+              .style("fill","black")
+              .attr("dx", 450)
+              .attr("dy", 20+yadjust);
+
+            svg1.append("rect")
+              .attr("class","p1")
+              .attr("x", 450-50)
+              .attr("y", 0+yadjust/2)
+              .attr("width",15)
+              .attr("height",15)
+              .style("fill","yellow");
+
+            svg1.append("rect")
+              .attr("class","p2")
+              .style("fill",function(d){return 'url(#pattern)'})
+              .attr("x", 450-50)
+              .attr("y", 20+yadjust/2)
+              .attr("width",15)
+              .attr("height",15);
 
           /////////////////TITLE DATA END/////////////////
         
@@ -481,8 +488,6 @@ function ready(error, us, states, counties, countymap) {
 
             svg1.selectAll("g")
                   .remove();
-
-            // force.stop();
 
               var nodesCounties = counties.features
                   .filter(function(d){return d.properties.abb==Statename;})
@@ -552,14 +557,22 @@ function ready(error, us, states, counties, countymap) {
               .on("mouseover",minimouseover)
               .on("mouseout",minimouseout);
 
-            // node.append("text")
-            //   .attr("dx", function(d) { return d.r/2;})
-            //   .attr("dy", function(d) { return d.r;})
-            //   .text(function(d) { return d.namecomp; })
-            //   .style("font-family", "Arial")
-            //   .style("font-size", function(d) {return (d.value + 50) + " px";})
-            //   .style("fill", "white")
-            //   .style("cursor", "default");
+            d3.select("#resetter")
+              .remove();
+
+            d3.select("#sp6")
+                .append("a")
+                .attr("id","resetter")
+                .attr("pointer-events","all")
+                .text("Back to states")
+                .style("margin-left","30px")
+                .attr("dx",30)
+                .attr("dy",40)
+                .on("click",function(d){
+                          d3.select(this)
+                            .remove();
+                          fight();});
+
 
           var miniCounty = countymap.features
                   .filter(function(d){return countymap.id==counties.features.id && counties.features.map(function(d){var abb=d.properties.abb

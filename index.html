@@ -129,7 +129,7 @@
   }
   #mymap {
     margin-left: -30px;
-    margin-top: -40px;
+    /*margin-top: -10px;*/
   }
   #mymap2 {
     margin-bottom: -30px;
@@ -145,12 +145,23 @@
     margin-left: 30px;
     margin-bottom: 10px;
   }
-  .table, tr, th, td, thead, tbody  {
+  .table { 
+    table-layout: fixed;
     margin-top: 10px;
     margin-left: 30px;
+    margin-bottom: 10px;
     margin-right: 50px;
-
+    width: 80%;
   }
+  table thead th { 
+    overflow: hidden;
+    margin-top: 10px;
+    margin-left: 30px;
+    margin-bottom: 10px;
+    margin-right: 20px; 
+  }
+  td.column{ width: 10% !important;}
+
   circle {
     fill: none;
     stroke-width: 5px;
@@ -183,9 +194,8 @@
           </div>
           <!-- Hypothesis: Biggest providers covers most of the locations with higher speeds than smaller providers -->
           <div class="span5">
-          <h4>Player Select. Choose wisely.</h4>
+          <h4>Players Selection. Choose wisely.</h4>
           <hr>
-          <p>Select the first company.</p>
             <div class="bfh-selectbox" id="move1box">
               <input type="hidden" name="selectbox1" id="firstbox" value="">
               <a class="bfh-selectbox-toggle" role="button" data-toggle="bfh-selectbox" href="#">
@@ -248,23 +258,22 @@
           </div>
           <hr>
           <!-- <br> -->
-          <div>
-            <table id="table" class="table table-condensed">
+          <div id="default1" style="display: none;">
+            <table  class="table table-condensed table-bordered">
                 <!-- <caption>State, county</caption> -->
               
               <thead>
 
                 <tr >
-                  <th>STATE, County</th>
+                  <th id="StateName">STATE, County</th>
                 </tr>
                 <tr>
-                  <th>Players</th>
-                  <th>Avg. Download Speed</th>
+                  <th style="width: 10%">Players</th>
+                  <th style="width: 10%">Avg. Download Speed</th>
                 </tr>
               </thead>
               <tbody>
-                <col width="10">
-              <col width="10">
+         
                 <tr>
                   <td>Company 1</td>
                   <td>Player 1</td>
@@ -279,7 +288,7 @@
           <hr>
 
               <p>The following minimap will allow you to quickly navigate the data on the left.  Additional information will automatically be displayed via a tooltip.</p>
-              <a href="" id="reset">reset all</a>
+              <div id="sp6"></div>
              <div id="mymap"></div>
             </div>
           </div>      

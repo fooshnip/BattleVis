@@ -221,8 +221,8 @@ function ready(error, us, states, counties, countymap) {
 
         var Player1 = document.getElementById('firstbox').value;
         var Player2 = document.getElementById('secondbox').value;
-        // var Player1k = document.getElementById('myselection1').innerHTML;
-        // var Player2k = document.getElementById('myselection2').innerHTML;
+        var Player1k = document.getElementById('myselection1').innerHTML;
+        var Player2k = document.getElementById('myselection2').innerHTML;
         var PointsPlayer1 =0; 
         var PointsPlayer2 = 0;
         var Diff = {};
@@ -290,13 +290,13 @@ function ready(error, us, states, counties, countymap) {
               if (nodesStates[key][Player1]>nodesStates[key][Player2]){
                 TotalPlayer1 = TotalPlayer1+1;
               }
-              else{
+              else if(nodesStates[key][Player1]<nodesStates[key][Player2]){
                 TotalPlayer2 = TotalPlayer2+1;
               }
             }
 
             // $("#Score").html("<p class='Score1'>"+Player1+"</p><p class='ScoreNum1'>"+TotalPlayer1+"</p><p class='ScoreNum2'>"+TotalPlayer2+"</p><p class='Score2'>"+Player2+"</p>");
-            $("#Score").html("<p class='Score1'><font COLOR=' blue'>"+Player1+""+TotalPlayer1+"</font>   <font COLOR=' red'>"+TotalPlayer2+" "+Player2+"</font></p>");
+            $("#Score").html("<p class='Score'><font COLOR=' blue'>"+Player1k+" "+TotalPlayer1+"</font>   <font COLOR=' red'>"+TotalPlayer2+" "+Player2k+"</font></p>");
 
           
             force
@@ -355,9 +355,6 @@ function ready(error, us, states, counties, countymap) {
                   .on("mouseout",minimapmouseout);
 
             /////////TITLE DATA//////////////////////
-
-            var Player1k = document.getElementById('myselection1').innerHTML;
-            var Player2k = document.getElementById('myselection2').innerHTML;  
 
             var yadjust=30;
             
@@ -585,7 +582,7 @@ function ready(error, us, states, counties, countymap) {
             if (nodesCounties[key][Player1]>nodesCounties[key][Player2]){
               TotalCountiesPlayer1 = TotalCountiesPlayer1+1;
             }
-            else{
+            else if (nodesCounties[key][Player1]<nodesCounties[key][Player2]) {
               TotalCountiesPlayer2 = TotalCountiesPlayer2+1;
             }
 
@@ -593,7 +590,7 @@ function ready(error, us, states, counties, countymap) {
             console.log(TotalCountiesPlayer1);
             }
 
-            $("#Score").html("<p class='Score1'><font COLOR=' blue'>"+Player1+""+TotalCountiesPlayer1+"</font>   <font COLOR=' red'>"+TotalCountiesPlayer2+" "+Player2+"</font></p>");
+            $("#Score").html("<p class='Score'><font COLOR=' blue'>"+Player1k+" "+TotalCountiesPlayer1+"</font>   <font COLOR=' red'>"+TotalCountiesPlayer2+" "+Player2k+"</font></p>");
 
 
             force
@@ -628,6 +625,7 @@ function ready(error, us, states, counties, countymap) {
                 .style("margin-left","30px")
                 .attr("dx",30)
                 .attr("dy",40)
+                .style("cursor", "pointer")
                 .on("click",function(d){
             
             d3.select(this)

@@ -139,11 +139,7 @@ function ready(error, us, states, counties, countymap) {
       .style("cursor", "default");
 
 
-////////////////MINIMAP/////////////////////
-
-
-          // .on("mouseover",minimouseover)
-          // .on("mouseout",minimouseout);
+////////////////MOUSE OVER FUNCTIONS/////////////////////
 
   function minimouseover(d){
 
@@ -152,25 +148,12 @@ function ready(error, us, states, counties, countymap) {
       d3.select(this)
         .style("stroke","gray")
         .style("stroke-width", 0.75);
-        // .style("stroke-opacity", 0.5);
 
       d3.selectAll("."+d.name)
         .style("stroke-width", 8)
         ;
 
-      $("#StateName").html(d.namecomp);
-      $("#pop-up").fadeOut(100,function () {
-          // Popup content
-          $("#pop-up-title").html(d.namecomp);
-          $("#pop-img").html(name);
-          
-
-          // Popup position
-          var popLeft = (d.x*scale)+trans[0]+20;//lE.cL[0] + 20;
-          var popTop = (d.y*scale)+trans[1]+20;//lE.cL[1] + 70;
-          $("#pop-up").css({"left":popLeft,"top":popTop});
-          $("#pop-up").fadeIn(100);
-      });
+      // $("#StateName").html(d.namecomp);
   }
 
   function minimouseout(d){
@@ -182,9 +165,9 @@ function ready(error, us, states, counties, countymap) {
       d3.selectAll("."+name)
         .style("stroke-width", 1);
 
-      // $("#pop-up").fadeOut(50);
-      //   d3.select("."+name).attr("fill","url(#ten1)");
+      // $("#StateName").html("STATE");
   }
+
 //////////////MINIMAP END////////////////////
 
   function tick(e) {
@@ -234,7 +217,7 @@ function ready(error, us, states, counties, countymap) {
 
   function fight(){  
 
-        $("#default1").show();
+        
 
         var Player1 = document.getElementById('firstbox').value;
         var Player2 = document.getElementById('secondbox').value;
@@ -246,6 +229,13 @@ function ready(error, us, states, counties, countymap) {
         
 
         if(Player1!=Player2 & Player1!=-1 & Player2!=-1){
+
+            $("#default1").show();
+            $("#PlayerName1").html(Player1);
+            $("#PlayerName2").html(Player2);
+
+            d3.select("#intro")
+            .remove();
 
             d3.selectAll(".minimap")
             .remove();
@@ -293,13 +283,22 @@ function ready(error, us, states, counties, countymap) {
                       name: namestate          
                     };
               });
-
+            TotalPlayer1 = 0;
+            TotalPlayer2 = 0;
             for (key in nodesStates){         
             nodesStates[key]['winner']= Math.max(nodesStates[key][Player1],nodesStates[key][Player2]);
-            console.log(nodesStates[key]['winner']);
-            console.log(nodesStates[key]['r']);
+              if (nodesStates[key][Player1]>nodesStates[key][Player2]){
+                TotalPlayer1 = TotalPlayer1+1;
+              }
+              else{
+                TotalPlayer2 = TotalPlayer2+1;
+              }
             }
 
+            // $("#Score").html("<p class='Score1'>"+Player1+"</p><p class='ScoreNum1'>"+TotalPlayer1+"</p><p class='ScoreNum2'>"+TotalPlayer2+"</p><p class='Score2'>"+Player2+"</p>");
+            $("#Score").html("<p class='Score1'><font COLOR=' blue'>"+Player1+""+TotalPlayer1+"</font>   <font COLOR=' red'>"+TotalPlayer2+" "+Player2+"</font></p>");
+
+          
             force
               .nodes(nodesStates)
               .on("tick", tick)
@@ -318,8 +317,8 @@ function ready(error, us, states, counties, countymap) {
               .attr("height", function(d) { if(d.winner ==0){return 60;} else{return d.winner*3+60;}})
               .style("stroke", "white")
               .style("fill", function(d) { if(d.winner ==0){return 'url(#pattern)';}else if(d[Player1]==d[Player2]&&d[Player1]!=0){return 'yellow';}else if(d[Player1]>d[Player2]){return 'blue';} else{return 'red';}})
-              .on("mouseover",minimouseover)
-              .on("mouseout",minimouseout);
+              .on("mouseover",minimouseover1)
+              .on("mouseout",minimouseout1);
 
             node.append("text")
               .attr("dx", function(d) { if(d.winner ==0){return 60/2;} else{return (d.winner+60)/2;}})
@@ -351,7 +350,9 @@ function ready(error, us, states, counties, countymap) {
               g.selectAll("path")
                   .data(nodesStates)
                   .style("fill", function(d) { if(d.winner ==0){return 'url(#pattern)';}else if(d[Player1]==d[Player2]&&d[Player1]!=0){return 'yellow';}else if(d[Player1]>d[Player2]){return 'blue';} else{return 'red';}})
-                  .on('click', onclick);
+                  .on('click', onclick)
+                  .on("mouseover",minimapmouseover)
+                  .on("mouseout",minimapmouseout);
 
             /////////TITLE DATA//////////////////////
 
@@ -364,39 +365,39 @@ function ready(error, us, states, counties, countymap) {
               .transition()
                 .remove();
 
-            svg1.append("text")
-              .attr("class","titletext")
-              .text(Player1k)
-              .style("font-size", "40px")
-              .style("font-family", "Yanone Kaffeesatz")
-              .style("fill","blue")
-              .attr("dx", 100)
-              .attr("dy", 0+yadjust);
+            // svg1.append("text")
+            //   .attr("class","titletext")
+            //   .text(Player1k+": "+TotalPlayer1)
+            //   .style("font-size", "40px")
+            //   .style("font-family", "Yanone Kaffeesatz")
+            //   .style("fill","blue")
+            //   .attr("dx", 100)
+            //   .attr("dy", 0+yadjust);
 
-            svg1.append("text")
-              .text(Player2k)
-              .attr("class","titletext")
-              .style("font-size", "40px")
-              .style("font-family", "Yanone Kaffeesatz")
-              .style("fill","red")
-              .attr("dx", 700)
-              .attr("dy", 0+yadjust);
+            // svg1.append("text")
+            //   .text(Player2k+": "+TotalPlayer2)
+            //   .attr("class","titletext")
+            //   .style("font-size", "40px")
+            //   .style("font-family", "Yanone Kaffeesatz")
+            //   .style("fill","red")
+            //   .attr("dx", 700)
+            //   .attr("dy", 0+yadjust);
 
-            svg1.append("rect")
-              .attr("class","p1")
-              .attr("x", 100-50)
-              .attr("y", 0)
-              .attr("width",15)
-              .attr("height",15)
-              .style("fill","blue");
+            // svg1.append("rect")
+            //   .attr("class","p1")
+            //   .attr("x", 100-50)
+            //   .attr("y", 0)
+            //   .attr("width",15)
+            //   .attr("height",15)
+            //   .style("fill","blue");
 
-            svg1.append("rect")
-              .attr("class","p2")
-              .style("fill","red")
-              .attr("x", 700-50)
-              .attr("y", 0)
-              .attr("width",15)
-              .attr("height",15);
+            // svg1.append("rect")
+            //   .attr("class","p2")
+            //   .style("fill","red")
+            //   .attr("x", 700-50)
+            //   .attr("y", 0)
+            //   .attr("width",15)
+            //   .attr("height",15);
 
             svg1.append("text")//TIES
               .attr("class","titletext")
@@ -433,6 +434,48 @@ function ready(error, us, states, counties, countymap) {
               .attr("height",15);
 
           /////////////////TITLE DATA END/////////////////
+
+          /////////////////MOUSEOVERS/////////////////
+
+            function minimouseover1(d){
+
+                var name = d.name;
+                console.log(name);
+                d3.select(this)
+                  .style("stroke","gray")
+                  .style("stroke-width", 0.75);
+
+                d3.selectAll("."+d.name)
+                  .style("stroke-width", 8)
+                  ;
+
+                $("#StateName").html(d.namecomp);
+                $("#AvgSpeed1").html(d[Player1].toFixed(2));
+                $("#AvgSpeed2").html(d[Player2].toFixed(2));
+            }
+
+            function minimouseout1(d){
+
+                var name = d.name;
+                d3.select(this)
+                  .style("stroke","white");
+
+                d3.selectAll("."+name)
+                  .style("stroke-width", 1);
+
+                $("#StateName").html("State");
+                $("#AvgSpeed1").html("-");
+                $("#AvgSpeed2").html("-");
+            }
+
+          function minimapmouseover(d){
+                $("#StateName").html(d.namecomp);
+            }
+
+            function minimapmouseout(d){
+
+                $("#StateName").html("State");
+            }
         
           function tick(e) {
             node.each(gravity(e.alpha * .2))
@@ -483,9 +526,11 @@ function ready(error, us, states, counties, countymap) {
 
         function onclick(d){
 
+
+
             var Statename = d.name;
             console.log(Statename);
-
+            $("#StateName").html(d.Statename);
             svg1.selectAll("g")
                   .remove();
 
@@ -495,6 +540,7 @@ function ready(error, us, states, counties, countymap) {
                       var point = projection(d.geometry.coordinates),
                         abb = d.id,
                         namestate = d.properties.abb,
+                        namestatecomp = d.properties.name,
                         namecomp = d.properties.countyname,
                         ATT = d.properties.ATT,
                         Cellco = d.properties.Cellco,
@@ -526,15 +572,29 @@ function ready(error, us, states, counties, countymap) {
                       Verizon: Verizon,
                       abb:abb,
                       namecomp: namecomp, 
-                      name: namestate          
+                      name: namestate,
+                      namestatecomp: namestatecomp          
                     };
               });
 
+            TotalCountiesPlayer1 = 0;
+            TotalCountiesPlayer2 = 0;
+
             for (key in nodesCounties){         
             nodesCounties[key]['winner']= Math.max(nodesCounties[key][Player1],nodesCounties[key][Player2]);
-            console.log(nodesCounties[key]['winner']);
-            console.log(nodesCounties[key]['r']);
+            if (nodesCounties[key][Player1]>nodesCounties[key][Player2]){
+              TotalCountiesPlayer1 = TotalCountiesPlayer1+1;
             }
+            else{
+              TotalCountiesPlayer2 = TotalCountiesPlayer2+1;
+            }
+
+            console.log(TotalCountiesPlayer2);
+            console.log(TotalCountiesPlayer1);
+            }
+
+            $("#Score").html("<p class='Score1'><font COLOR=' blue'>"+Player1+""+TotalCountiesPlayer1+"</font>   <font COLOR=' red'>"+TotalCountiesPlayer2+" "+Player2+"</font></p>");
+
 
             force
               .nodes(nodesCounties)
@@ -554,8 +614,8 @@ function ready(error, us, states, counties, countymap) {
               .attr("height", function(d) { if(d.winner ==0){return 20;} else{return d.winner*3+20;}})
               .style("fill", function(d) { if(d.winner ==0){return 'url(#pattern)';}else if(d[Player1]==d[Player2]&&d[Player1]!=0){return 'yellow';}else if(d[Player1]>d[Player2]){return 'blue';} else{return 'red';}})
               .style("stroke", "white")
-              .on("mouseover",minimouseover)
-              .on("mouseout",minimouseout);
+              .on("mouseover",minimouseover2)
+              .on("mouseout",minimouseout2);
 
             d3.select("#resetter")
               .remove();
@@ -569,9 +629,10 @@ function ready(error, us, states, counties, countymap) {
                 .attr("dx",30)
                 .attr("dy",40)
                 .on("click",function(d){
-                          d3.select(this)
-                            .remove();
-                          fight();});
+            
+            d3.select(this)
+                .remove();
+                fight();});
 
 
           var miniCounty = countymap.features
@@ -580,9 +641,41 @@ function ready(error, us, states, counties, countymap) {
           console.log(miniCounty);
           console.log(counties.features.map(function(d){var abb=d.properties.abb
                               return abb}));
-          //console.log(counties.features.properties.abb);
-          // console.log(nodesCounties);
         
+          function minimouseover2(d){
+
+                var name = d.name;
+                console.log(name);
+                d3.select(this)
+                  .style("stroke","gray")
+                  .style("stroke-width", 0.75);
+
+                d3.selectAll("."+d.name)
+                  .style("stroke-width", 8)
+                  ;
+
+                $("#StateName").html(d.namestatecomp+", "+d.namecomp);
+                $("#AvgSpeed1").html(d[Player1].toFixed(2));
+                $("#AvgSpeed2").html(d[Player2].toFixed(2));
+            }
+
+            function minimouseout2(d){
+
+                var name = d.name;
+                d3.select(this)
+                  .style("stroke","white");
+
+                d3.selectAll("."+name)
+                  .style("stroke-width", 1);
+
+                $("#StateName").html(d.namestatecomp);
+                $("#AvgSpeed1").html("-");
+                $("#AvgSpeed2").html("-");
+            }
+
+
+
+
           function tick(e) {
             node.each(gravity(e.alpha * .1))
                 .each(collide(.5));

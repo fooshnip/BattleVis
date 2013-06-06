@@ -86,12 +86,32 @@
     font-family: "Yanone Kaffeesatz";
     text-rendering: optimizeLegibility;
   }
+  h2 {
+    font-size: 55px;
+    margin-left: 40px;
+    font-family: "Yanone Kaffeesatz";
+    text-rendering: optimizeLegibility;
+  }
+  h3 {
+    font-size: 36px;
+    margin-left: 410px;
+    font-family: "Yanone Kaffeesatz";
+    text-rendering: optimizeLegibility;
+  }
   h4 {
     font-size: 30px;
     line-height: 30px;
     margin-top: .3em;
     margin-bottom: 10px;
     margin-left: 20px;
+    font-family: "Yanone Kaffeesatz";
+    text-rendering: optimizeLegibility;
+  }
+  h5 {
+    font-size: 24px;
+    margin-left: 30px;
+    margin-top: 20px;
+    margin-bottom: 10px;
     font-family: "Yanone Kaffeesatz";
     text-rendering: optimizeLegibility;
   }
@@ -111,7 +131,7 @@
     font-family: "Helvetica Neue";
   }
   hr{
-    margin-left: 20px;
+    margin-left: 0px;
     margin-right: 20px;
   }
   footer {
@@ -166,6 +186,37 @@
     fill: none;
     stroke-width: 5px;
   }
+/*  #Score {
+    margin-left:150px;
+  }*/
+  .Score1{
+    text-align:center;
+    font-family:"Yanone Kaffeesatz";
+    font-size: 40px;
+    color:blue;
+    /*display: inline;*/
+  }
+  .Score2{
+    text-align:center;
+    font-family:"Yanone Kaffeesatz";
+    font-size: 40px;
+    color:red;
+    display: inline;
+  }
+  .ScoreNum1{
+    text-align:center;
+    font-family:"Yanone Kaffeesatz";
+    font-size: 50px;
+    color:blue;
+    display: inline;
+  }
+  .ScoreNum2{
+    text-align:center;
+    font-family:"Yanone Kaffeesatz";
+    font-size: 50px;
+    color:red;
+    display: inline;
+  }
 
 
   </style>
@@ -188,6 +239,7 @@
             <h6>Who's got the broadest bands in the land...</h6>
             <hr>
             <!-- <p>Before getting too excited, head on over to the player select menu on the right and select who will toe the line. -->
+            <div id="Score"></div>
             <div id="mymap2">
             </div>
             <footer>By Yoojong Bang, Benedict Lim, Joseph Riley, Maria Virginia Rodriguez</footer>
@@ -196,7 +248,8 @@
           <div class="span5">
           <h4>Players Selection. Choose wisely.</h4>
           <hr>
-            <div class="bfh-selectbox" id="move1box">
+          <div class="row-fluid">
+            <div class="bfh-selectbox span4" id="move1box" style="margin-top: 15px">
               <input type="hidden" name="selectbox1" id="firstbox" value="">
               <a class="bfh-selectbox-toggle" role="button" data-toggle="bfh-selectbox" href="#">
                 <span class="bfh-selectbox-option input-medium" data-option=-1 id="myselection1">Combatant 1</span>
@@ -218,14 +271,14 @@
                   <li><a tabindex="-1" href="#" data-option="Verizon">Verizon</a></li>
                 </ul>
               </div>
-
               </div>
-
             </div>
+
+            <h3 class="span2">&nbsp;&nbsp;Vs.</h3>
 
          <!--  <br>
             <p>Next, select the provider you would like to compare with your initial choice.</p> -->
-            <div class="bfh-selectbox" id="move2box">
+            <div class="bfh-selectbox span4" id="move2box" style="margin-top: 15px">
             <input type="hidden" name="selectbox2" id="secondbox" value="">
             <a class="bfh-selectbox-toggle" role="button" data-toggle="bfh-selectbox" href="#">
               <span class="bfh-selectbox-option input-medium" data-option=-1 id="myselection2">Combatant 2</span>
@@ -249,45 +302,51 @@
             </div>
             </div>
           </div>
-          <div>
-            
+          <div class="span8">
             <!-- <p> -->
               <!-- <h4>Ready.</h4> -->
-              <button id="fight" class="btn btn-danger " type="button">Fight!</button>
+              <button id="fight" class="btn btn-danger span3" type="button" style="margin-left: 200px">Fight!</button>
             <!-- </p> -->
           </div>
+        </div>
           <hr>
           <!-- <br> -->
           <div id="default1" style="display: none;">
             <table  class="table table-condensed table-bordered">
-                <!-- <caption>State, county</caption> -->
-              
               <thead>
-
                 <tr >
-                  <th id="StateName">STATE, County</th>
+                  <th id="StateName">STATE</th>
                 </tr>
                 <tr>
-                  <th style="width: 10%">Players</th>
-                  <th style="width: 10%">Avg. Download Speed</th>
+                  <th >Players</th>
+                  <th >Avg. Download Speed</th>
                 </tr>
               </thead>
-              <tbody>
-         
+              <tbody>       
                 <tr>
-                  <td>Company 1</td>
-                  <td>Player 1</td>
+                  <td id="PlayerName1">Company 1</td>
+                  <td id="AvgSpeed1">-</td>
                 </tr>
                 <tr>
-                  <td>Company 2</td>
-                  <td>Player 1</td>
+                  <td id="PlayerName2">Company 2</td>
+                  <td id="AvgSpeed2">-</td>
                 </tr>
               </tbody>
             </table>
+          <hr><p>The following minimap will allow you to quickly navigate the data on the left.  Click through to see county level data for that state.</p>
           </div>
-          <hr>
-
-              <p>The following minimap will allow you to quickly navigate the data on the left.  Additional information will automatically be displayed via a tooltip.</p>
+              <div id="intro"><p>
+                <h5>Welcome to the battle of the bands!</h5>
+                
+                <p>
+                Using data showcased on the <a href="http://www.broadbandmap.gov/data-download">National Broadband Map</a>, we sought to provide a fun, interactive look at the download speeds across the country by wireless provider.  Data was aggregated at state and county levels to enable the comparisons of average download speeds.</p>
+                <br><h5>The battle lines have been drawn!</h5>
+                <p>
+                Make direct comparisons between two providers by selecting them from the drop down list seen above.  The top 10 providers, according to coverage, were selected from the original data set, and they provide strong representation across the country</p>
+                <br><h5>Meet the pseudo-cartogram.</h5>
+                <p>The use of squares can help better conceptualize data, while still maintaining the general geographic relationships.  Squares are colored based on who offered the fastest typical download speeds in the region, and they are sized by the relative difference over their competitor.  
+                <br><h5 style="font-color:red">So select your competitors, and let's get it on!</p>
+              </div>
               <div id="sp6"></div>
              <div id="mymap"></div>
             </div>
@@ -298,3 +357,4 @@
     <script src="js/PseudoDemersCartogram.js"></script>
   </body>
 </html>
+
